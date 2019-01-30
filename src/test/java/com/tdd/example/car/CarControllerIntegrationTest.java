@@ -37,4 +37,26 @@ public class CarControllerIntegrationTest {
             Assert.fail(e.getMessage());
         }
     }
+
+    @Test
+    public void putDuplicateCarsReturns409() {
+        try {
+            final ObjectMapper objectMapper = new ObjectMapper();
+
+            final Car car = new Car();
+            car.setMake("Test Make2");
+            car.setModel("Test Model2");
+            mvc.perform(MockMvcRequestBuilders.put("/car")
+                    .content(objectMapper.writeValueAsString(car))
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isCreated());
+
+            mvc.perform(MockMvcRequestBuilders.put("/car")
+                    .content(objectMapper.writeValueAsString(car))
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isConflict());
+        } catch (Exception e) {
+            Assert.fail(e.getMessage());
+        }
+    }
 }
