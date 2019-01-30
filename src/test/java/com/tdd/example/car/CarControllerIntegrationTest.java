@@ -106,4 +106,16 @@ public class CarControllerIntegrationTest {
             Assert.fail(e.getMessage());
         }
     }
+
+    @Test
+    public void getCarForNoModelCarReturns204() {
+        try {
+            mvc.perform(MockMvcRequestBuilders.get("/car")
+                    .param("model", "Missing model")
+                    .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isNoContent());
+        } catch (Exception e) {
+            Assert.fail(e.getMessage());
+        }
+    }
 }
