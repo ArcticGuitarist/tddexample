@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.Objects;
 
 @Entity
 public class Car {
@@ -37,5 +38,26 @@ public class Car {
 
     public void setModel(String model) {
         this.model = model;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        // Using only make and model since there is no DB.  This is just an example
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof Car)) {
+            return false;
+        }
+
+        final Car car = (Car) o;
+        return Objects.equals(getMake(), car.getMake()) &&
+                Objects.equals(getModel(), car.getModel());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getMake(), getModel());
     }
 }

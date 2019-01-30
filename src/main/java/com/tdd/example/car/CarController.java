@@ -15,7 +15,6 @@ public class CarController {
     @RequestMapping(value = "/car", method = RequestMethod.PUT)
     public @ResponseBody ResponseEntity<?> putCar(@RequestBody(required = true) Car car) {
         // Add to DB not set this is just an example
-        cars.add(car);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return cars.add(car) ? new ResponseEntity<>(HttpStatus.CREATED) : new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 }
