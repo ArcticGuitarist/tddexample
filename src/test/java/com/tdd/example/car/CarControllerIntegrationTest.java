@@ -59,4 +59,17 @@ public class CarControllerIntegrationTest {
             Assert.fail(e.getMessage());
         }
     }
+
+    @Test
+    public void putNoCarReturns400() {
+        try {
+            final ObjectMapper objectMapper = new ObjectMapper();
+
+            mvc.perform(MockMvcRequestBuilders.put("/car")
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isBadRequest());
+        } catch (Exception e) {
+            Assert.fail(e.getMessage());
+        }
+    }
 }
