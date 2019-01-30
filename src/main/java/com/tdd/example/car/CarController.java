@@ -29,8 +29,8 @@ public class CarController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
             return cars.stream()
-                    .filter(car -> (StringUtils.isBlank(make) || Objects.equals(car.getMake(), make)) &&
-                                   (StringUtils.isBlank(model) || Objects.equals(car.getModel(), model)))
+                    .filter(car -> (StringUtils.isBlank(make) || Objects.equals(StringUtils.trim(car.getMake()), StringUtils.trim(make))) &&
+                                   (StringUtils.isBlank(model) || Objects.equals(StringUtils.trim(car.getModel()), StringUtils.trim(model))))
                     .findFirst()
                     .<ResponseEntity<?>>map(car -> new ResponseEntity<>(car, HttpStatus.OK))
                     .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
