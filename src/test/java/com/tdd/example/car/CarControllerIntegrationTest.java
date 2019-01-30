@@ -176,7 +176,7 @@ public class CarControllerIntegrationTest {
             Assert.fail(e.getMessage());
         }
     }
-    
+
     @Test
     public void getCarByModelAndMakeReturnsCar() {
         try {
@@ -193,6 +193,30 @@ public class CarControllerIntegrationTest {
             mvc.perform(MockMvcRequestBuilders.get("/car")
                     .param("make", car.getMake())
                     .param("model", car.getModel())
+                    .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(content().json(objectMapper.writeValueAsString(car)));
+        } catch (Exception e) {
+            Assert.fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void getCarByModelAndMakeReturnsCarTrimsLeadingAndTrailingWhitespace() {
+        try {
+            final ObjectMapper objectMapper = new ObjectMapper();
+
+            final Car car = new Car();
+            car.setMake("Test Make for Getting Car4");
+            car.setModel("Test Model for Getting Car4");
+            mvc.perform(MockMvcRequestBuilders.put("/car")
+                    .content(objectMapper.writeValueAsString(car))
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isCreated());
+
+            mvc.perform(MockMvcRequestBuilders.get("/car")
+                    .param("make",  "     " + car.getMake() + "     ")
+                    .param("model",  "     " + car.getModel() + "     ")
                     .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(content().json(objectMapper.writeValueAsString(car)));
