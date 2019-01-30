@@ -1,5 +1,6 @@
 package com.tdd.example.car;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,20 +25,15 @@ public class CarController {
             @RequestParam(required = false) String make,
             @RequestParam(required = false) String model) {
         // Get from DB not set this is just an example
-        if (make != null) {
-            return cars.stream()
-                    .filter(car -> Objects.equals(car.getMake(), make))
-                    .findFirst()
-                    .<ResponseEntity<?>>map(car -> new ResponseEntity<>(car, HttpStatus.OK))
-                    .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
-        } else if (model != null) {
-            return cars.stream()
-                    .filter(car -> Objects.equals(car.getModel(), model))
-                    .findFirst()
-                    .<ResponseEntity<?>>map(car -> new ResponseEntity<>(car, HttpStatus.OK))
-                    .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
-        } else {
+        if (StringUtils.isBlank(make) && StringUtils.isBlank(model)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            return cars.stream()
+                    .filter(car -> (StringUtils.isBlank(make) || Objects.equals(car.getMake(), make)) &&
+                                   (StringUtils.isBlank(model) || Objects.equals(car.getModel(), model)))
+                    .findFirst()
+                    .<ResponseEntity<?>>map(car -> new ResponseEntity<>(car, HttpStatus.OK))
+                    .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
         }
     }
 }
