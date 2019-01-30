@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @RestController
@@ -21,6 +22,10 @@ public class CarController {
     @RequestMapping(value = "/car", method = RequestMethod.GET)
     public @ResponseBody ResponseEntity<?> getCar(@RequestParam(required = false) String make) {
         // Get from DB not set this is just an example
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return cars.stream()
+                .filter(car -> Objects.equals(car.getMake(), make))
+                .findFirst()
+                .<ResponseEntity<?>>map(car -> new ResponseEntity<>(car, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
 }
