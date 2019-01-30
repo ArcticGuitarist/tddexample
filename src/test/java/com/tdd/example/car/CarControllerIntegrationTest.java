@@ -72,4 +72,18 @@ public class CarControllerIntegrationTest {
             Assert.fail(e.getMessage());
         }
     }
+
+    @Test
+    public void getCarForNoMakeCarReturns204() {
+        try {
+            final ObjectMapper objectMapper = new ObjectMapper();
+
+            mvc.perform(MockMvcRequestBuilders.get("/car")
+                    .param("make", "Missing Make")
+                    .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isNoContent());
+        } catch (Exception e) {
+            Assert.fail(e.getMessage());
+        }
+    }
 }
