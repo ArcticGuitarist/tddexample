@@ -20,12 +20,22 @@ public class CarController {
     }
 
     @RequestMapping(value = "/car", method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity<?> getCar(@RequestParam(required = false) String make) {
+    public @ResponseBody ResponseEntity<?> getCar(
+            @RequestParam(required = false) String make,
+            @RequestParam(required = false) String model) {
         // Get from DB not set this is just an example
-        return cars.stream()
-                .filter(car -> Objects.equals(car.getMake(), make))
-                .findFirst()
-                .<ResponseEntity<?>>map(car -> new ResponseEntity<>(car, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
+        if (make != null) {
+            return cars.stream()
+                    .filter(car -> Objects.equals(car.getMake(), make))
+                    .findFirst()
+                    .<ResponseEntity<?>>map(car -> new ResponseEntity<>(car, HttpStatus.OK))
+                    .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
+        } else {
+            return cars.stream()
+                    .filter(car -> Objects.equals(car.getModel(), model))
+                    .findFirst()
+                    .<ResponseEntity<?>>map(car -> new ResponseEntity<>(car, HttpStatus.OK))
+                    .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
+        }
     }
 }
