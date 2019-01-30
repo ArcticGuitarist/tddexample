@@ -23,6 +23,24 @@ public class CarControllerIntegrationTest {
     private MockMvc mvc;
 
     @Test
+    public void putReturnsStringTextBack() {
+        try {
+            final ObjectMapper objectMapper = new ObjectMapper();
+
+            final Car car = new Car();
+            car.setMake("Test Make Content is returned");
+            car.setModel("Test Model Content is returned");
+            mvc.perform(MockMvcRequestBuilders.put("/car")
+                    .content(objectMapper.writeValueAsString(car))
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isCreated())
+                    .andExpect(content().string("Added Data"));
+        } catch (Exception e) {
+            Assert.fail(e.getMessage());
+        }
+    }
+
+    @Test
     public void putNewCarReturns201() {
         try {
             final ObjectMapper objectMapper = new ObjectMapper();
