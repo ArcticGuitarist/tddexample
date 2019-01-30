@@ -23,7 +23,7 @@ public class CarControllerIntegrationTest {
     private MockMvc mvc;
 
     @Test
-    public void putReturnsStringTextBack() {
+    public void putReturnsAddedCarInformation() {
         try {
             final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -34,7 +34,13 @@ public class CarControllerIntegrationTest {
                     .content(objectMapper.writeValueAsString(car))
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isCreated())
-                    .andExpect(content().string("Added Data"));
+                    .andExpect(result -> {
+                        String contentAsString = result.getResponse().getContentAsString();
+                        Assert.assertNotNull(contentAsString);
+                        Car readValue = objectMapper.readValue(contentAsString, Car.class);
+                        Assert.assertEquals(car.getMake(), readValue.getMake());
+                        Assert.assertEquals(car.getModel(), readValue.getModel());
+                    });
         } catch (Exception e) {
             Assert.fail(e.getMessage());
         }
