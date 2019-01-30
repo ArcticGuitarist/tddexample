@@ -17,4 +17,10 @@ public class CarController {
         // Add to DB not set this is just an example
         return cars.add(car) ? new ResponseEntity<>(HttpStatus.CREATED) : new ResponseEntity<>(HttpStatus.CONFLICT);
     }
+
+    @RequestMapping(value = "/car", method = RequestMethod.GET)
+    public @ResponseBody ResponseEntity<?> getCar(@RequestParam(required = false) String make) {
+        // Get from DB not set this is just an example
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
