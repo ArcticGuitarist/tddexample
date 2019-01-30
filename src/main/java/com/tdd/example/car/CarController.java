@@ -30,12 +30,14 @@ public class CarController {
                     .findFirst()
                     .<ResponseEntity<?>>map(car -> new ResponseEntity<>(car, HttpStatus.OK))
                     .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
-        } else {
+        } else if (model != null) {
             return cars.stream()
                     .filter(car -> Objects.equals(car.getModel(), model))
                     .findFirst()
                     .<ResponseEntity<?>>map(car -> new ResponseEntity<>(car, HttpStatus.OK))
                     .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 }
