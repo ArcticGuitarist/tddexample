@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -63,8 +64,6 @@ public class CarControllerIntegrationTest {
     @Test
     public void putNoCarReturns400() {
         try {
-            final ObjectMapper objectMapper = new ObjectMapper();
-
             mvc.perform(MockMvcRequestBuilders.put("/car")
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isBadRequest());
@@ -76,12 +75,33 @@ public class CarControllerIntegrationTest {
     @Test
     public void getCarForNoMakeCarReturns204() {
         try {
-            final ObjectMapper objectMapper = new ObjectMapper();
-
             mvc.perform(MockMvcRequestBuilders.get("/car")
                     .param("make", "Missing Make")
                     .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNoContent());
+        } catch (Exception e) {
+            Assert.fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void getCarByMakeReturnsCar() {
+        try {
+            final ObjectMapper objectMapper = new ObjectMapper();
+
+            final Car car = new Car();
+            car.setMake("Test Make for Getting Car");
+            car.setModel("Test Model for Getting Car");
+            mvc.perform(MockMvcRequestBuilders.put("/car")
+                    .content(objectMapper.writeValueAsString(car))
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isCreated());
+
+            mvc.perform(MockMvcRequestBuilders.get("/car")
+                    .param("make", car.getMake())
+                    .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(content().json(objectMapper.writeValueAsString(car)));
         } catch (Exception e) {
             Assert.fail(e.getMessage());
         }
