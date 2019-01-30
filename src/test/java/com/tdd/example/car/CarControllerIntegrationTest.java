@@ -141,4 +141,15 @@ public class CarControllerIntegrationTest {
             Assert.fail(e.getMessage());
         }
     }
+
+    @Test
+    public void getWithoutMakeAndModelReturns400() {
+        try {
+            mvc.perform(MockMvcRequestBuilders.get("/car")
+                    .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isBadRequest());
+        } catch (Exception e) {
+            Assert.fail(e.getMessage());
+        }
+    }
 }
